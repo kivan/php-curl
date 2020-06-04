@@ -389,8 +389,12 @@ class Curl
                 }
             }
             //create $fp automatically for lots of download tasks.
-            if(isset($task['args']['file']) && $task['opt'][CURLOPT_FILE] == null) {
-                $task['opt'][CURLOPT_FILE] = fopen($task['args']['file'], 'w');
+            if(isset($task['args']['file']) && !isset($task['opt'][CURLOPT_FILE])) {
+                $fp = fopen($task['args']['file'], 'wb');
+                if($fp) {
+                    $task['opt'][CURLOPT_FILE] = $fp;
+                    $task['opt'][CURLOPT_HEADER] = false;
+                }
             }
             $cache = null;
             if (isset($task)) {
